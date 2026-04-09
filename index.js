@@ -59,7 +59,17 @@ app.get('/api/orders', async (req, res) => {
             },
         },
     );
-    res.status(status).json(data);
+
+    const links = data.links;
+    const payerActionLinkObject = links.find((l) => l.rel === 'payer-action');
+    const targetLink = payerActionLinkObject.href;
+
+    res.redirect(targetLink);
+});
+
+app.get('/success', (req, res) => {
+    // Sauvegarder trace du paiement paypal (token, payer id)
+    res.status(200).json('Order confirmed');
 });
 
 app.listen(3000, () => {
